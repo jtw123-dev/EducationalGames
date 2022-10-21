@@ -12,12 +12,18 @@ public class PictureMatchGame : MonoBehaviour
     [SerializeField] private Image[] _imageCollection;
     [SerializeField] private Image _testing;
     [SerializeField] private Text _timeRemaining;
+    [SerializeField] private GameObject _resultScreen;
+    [SerializeField] private Text _ultimateScore;
     private float _time = 20;
     private int _score;
+    private Settings _setting;
   
     // Start is called before the first frame update
     void Start()
     {
+        _setting = GameObject.Find("ProfileScreen").GetComponent<Settings>();
+        _time = 20;
+        _timeRemaining.text = _time.ToString();
         _grid.gameObject.SetActive(true);
         foreach(var image in _imageCollection)
         {
@@ -47,6 +53,17 @@ public class PictureMatchGame : MonoBehaviour
             else
         {
             _gridCollection.SetActive(false);
+            _resultScreen.gameObject.SetActive(true);
+            _ultimateScore.text = _text.text;
+
+            if (_setting.otherPlayer==false)
+            {
+                PlayerPrefs.SetString("MatchGameScore", _score.ToString());
+            }
+           else
+            {
+                PlayerPrefs.SetString("MatchGameScore1", _score.ToString());
+            }
         }
     }
 
@@ -70,6 +87,7 @@ public class PictureMatchGame : MonoBehaviour
         _score = 0;
         _testing.sprite = _images[Random.Range(0, _images.Length)];
         _gridCollection.SetActive(true);
+
         _time = 20;
         _text.text = _score.ToString();
     }
